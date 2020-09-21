@@ -28,6 +28,8 @@ do_exec intro/inputs/tux-0480.png intro/outputs/aes.key ECB intro/outputs/tux048
 do_exec intro/inputs/tecnico-0960.png intro/outputs/aes.key ECB intro/outputs/tecnico0960-aes-ecb.png
 do_exec intro/inputs/tux-2400.png intro/outputs/aes.key ECB intro/outputs/tux2400-aes-ecb.png
 
+echo "change line KeyGenerator keyGen = KeyGenerator.getInstance(\"AES\"); and add an additional argument containing the provider."
+
 echo "AES PROVIDES DISTORTED \"INFORMATION\" ABOUT THE DATA"
 echo "ALSO OTP HAS A LIMIT TO THE AMOUNT OF DATA IT CAN CIPHER"
 
@@ -42,7 +44,8 @@ do_exec intro/inputs/tecnico-0480.png intro/outputs/aes.key OFB intro/outputs/te
 PACKAGE=ImageXor
 do_exec intro/outputs/glider-aes-cbc.png intro/outputs/tux-aes-cbc.png intro/outputs/glider-tux-aes-cbc.png
 do_exec intro/outputs/tux-aes-ofb.png intro/outputs/tecnico-aes-ofb.png intro/outputs/glider-tecnico-aes-cbc.png
-
+echo "They appear overlapped. This happens because looking at the OFB architecture, the key ciphers the IV and that will be used as \"key\" to XOR with the plaintext"
+echo "CBC is more secure than OFB"
 
 openssl genrsa -out server.key
 openssl genrsa -out user.key

@@ -30,7 +30,7 @@ public class RSACipher implements ByteArrayMixer {
 
     @Override
     public byte[] mix(byte[] byteArray, byte[] byteArray2) {
-
+        byte[] encryptedData = new byte[byteArray.length];
         try {
             // get a DES cipher object and print the provider
             Cipher cipher = Cipher.getInstance("RSA/" + mode + "/PKCS1Padding");
@@ -42,8 +42,18 @@ public class RSACipher implements ByteArrayMixer {
             } else {
                 do_encrypt(cipher);
             }
-            
-            return cipher.doFinal(byteArray);
+
+            byte[] test = new byte[117];
+
+            for(int i = 0; i < byteArray.length; i++) {
+                if((i%117 == 0) && (i != 0)) {
+                    return cipher.doFinal(test);
+                }
+                test[i%117] = byteArray[i];
+            }
+
+            return byteArray;
+
 
         } catch (Exception e) {
             // Pokemon exception handling!

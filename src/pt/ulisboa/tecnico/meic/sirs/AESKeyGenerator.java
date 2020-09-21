@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import java.security.Security;
 
 import static javax.xml.bind.DatatypeConverter.printHexBinary;
 
@@ -36,8 +38,11 @@ public class AESKeyGenerator {
 
     public static void write(String keyPath) throws GeneralSecurityException, IOException {
         // get an AES private key
+        if(Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.insertProviderAt(new BouncyCastleProvider(), 1);
+        }
         System.out.println("Generating AES key ..." );
-        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES", "BC");
         keyGen.init(128);
         Key key = keyGen.generateKey();
         System.out.println( "Finish generating AES key" );
