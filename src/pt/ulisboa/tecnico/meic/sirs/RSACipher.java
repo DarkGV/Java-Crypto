@@ -2,8 +2,7 @@ package pt.ulisboa.tecnico.meic.sirs;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
-import java.nio.file.Paths;
-import java.nio.file.Files;
+import java.io.FileInputStream;
 import java.security.spec.X509EncodedKeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.PublicKey;
@@ -43,9 +42,8 @@ public class RSACipher implements ByteArrayMixer {
             } else {
                 do_encrypt(cipher);
             }
-
             
-            return cipher.doFinal(b);
+            return cipher.doFinal(byteArray);
 
         } catch (Exception e) {
             // Pokemon exception handling!
@@ -77,9 +75,12 @@ public class RSACipher implements ByteArrayMixer {
     }
 
     private PublicKey getPublicKey() throws Exception {
-        byte[] key = Files.readAllBytes(Paths.get(this.keyFile));
+        FileInputStream pubFis = new FileInputStream(this.keyFile);
+        byte[] pubEncoded = new byte[pubFis.available()];
+        pubFis.read(pubEncoded);
+        pubFis.close();
 
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(key);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(pubEncoded);
 
         KeyFactory kf = KeyFactory.getInstance("RSA");
 
@@ -87,12 +88,14 @@ public class RSACipher implements ByteArrayMixer {
     }
 
     private PrivateKey getPrivateKey() throws Exception {
-        byte[] key = Files.readAllBytes(Paths.get(this.keyFile));
+        FileInputStream privFis = new FileInputStream(this.keyFile);
+        byte[] privEncoded = new byte[privFis.available()];
+        privFis.read(privEncoded);
+        privFis.close();
 
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(key);
-
+        PKCS8EncodedKeySpec privSpec = new PKCS8EncodedKeySpec(privEncoded);
         KeyFactory kf = KeyFactory.getInstance("RSA");
 
-        return kf.generatePrivate(keySpec);
+        return kf.generatePrivate(privSpec);
     }
 }
