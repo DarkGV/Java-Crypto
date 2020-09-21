@@ -1,0 +1,80 @@
+#!/bin/bash
+
+do_exec() {
+    mvn exec:java -Dmainclass=pt.ulisboa.tecnico.meic.sirs.$PACKAGE -Dexec.args="$1 $2 $3 $4"
+}
+
+do_compile() {
+    mvn clean compile
+}
+
+do_compile
+
+# PACKAGE=RandomImageGenerator
+# do_exec intro/outputs/otp.png 480 480
+
+# PACKAGE=ImageXor
+# do_exec intro/inputs/tecnico-0480.png intro/outputs/otp.png intro/outputs/encrypted-tecnico.png
+# do_exec intro/inputs/tux-0480.png intro/outputs/otp.png intro/outputs/encrypted-tux.png
+# do_exec intro/outputs/encrypted-tecnico.png intro/outputs/encrypted-tux.png intro/outputs/tecnico-tux.png
+# do_exec intro/inputs/tux-2400.png intro/outputs/otp.png intro/outputs/encrypted-tux2400.png
+
+# PACKAGE=AESKeyGenerator
+# do_exec w intro/outputs/aes.key
+
+# PACKAGE=ImageAESCipher 
+# do_exec intro/inputs/glider-0480.png intro/outputs/aes.key ECB intro/outputs/glider-aes-ecb.png
+# do_exec intro/inputs/tux-0480.png intro/outputs/aes.key ECB intro/outputs/tux0480-aes-ecb.png
+# do_exec intro/inputs/tecnico-0960.png intro/outputs/aes.key ECB intro/outputs/tecnico0960-aes-ecb.png
+# do_exec intro/inputs/tux-2400.png intro/outputs/aes.key ECB intro/outputs/tux2400-aes-ecb.png
+
+# echo "AES PROVIDES DISTORTED \"INFORMATION\" ABOUT THE DATA"
+# echo "ALSO OTP HAS A LIMIT TO THE AMOUNT OF DATA IT CAN CIPHER"
+
+# do_exec intro/inputs/glider-0480.png intro/outputs/aes.key CBC intro/outputs/glider-aes-cbc.png
+# do_exec intro/inputs/tux-0480.png intro/outputs/aes.key CBC intro/outputs/tux-aes-cbc.png
+# do_exec intro/inputs/tecnico-0480.png intro/outputs/aes.key CBC intro/outputs/tecnico-aes-cbc.png
+
+# do_exec intro/inputs/glider-0480.png intro/outputs/aes.key OFB intro/outputs/glider-aes-ofb.png
+# do_exec intro/inputs/tux-0480.png intro/outputs/aes.key OFB intro/outputs/tux-aes-ofb.png
+# do_exec intro/inputs/tecnico-0480.png intro/outputs/aes.key OFB intro/outputs/tecnico-aes-ofb.png
+
+# PACKAGE=ImageXor
+# do_exec intro/outputs/glider-aes-cbc.png intro/outputs/tux-aes-cbc.png intro/outputs/glider-tux-aes-cbc.png
+# do_exec intro/outputs/tux-aes-ofb.png intro/outputs/tecnico-aes-ofb.png intro/outputs/glider-tecnico-aes-cbc.png
+
+
+# openssl genrsa -out server.key
+# openssl genrsa -out user.key
+
+# openssl rsa -in server.key -pubout > server-public.key
+# openssl rsa -in user.key -pubout > user-public.key
+
+# openssl req -new -key server.key -out server.csr
+# openssl req -new -key user.key -out user.csr
+
+# openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+# echo 01 > server.srl
+# openssl x509 -req -days 365 -in user.csr -CA server.crt -CAkey server.key -out user.crt
+# echo 01 > user.srl
+
+# openssl dgst -sha256 grades/inputs/grades.txt > grades.sha256
+
+# openssl dgst -sha256 grades/inputs/grades.txt > grades.sha256
+# openssl rsautl -sign -inkey user.key -keyform PEM -in grades.sha256 > grades.sig
+
+# openssl rsautl -verify -in grades.sig -inkey user.key > rsautil.res
+# openssl dgst -sha256 grades/inputs/grades.txt > dgst.res
+
+# diff rsautil.res dgst.res
+
+# openssl verify -CAfile server.crt user.crt
+
+# openssl pkcs8 -topk8 -inform PEM -outform DER -in server.key -nocrypt > server_pkcs8.key
+
+# PACKAGE=RSAKeyGenerator
+# do_exec r server_pkcs8.key server.crt
+# do_exec w intro/outputs/priv.key intro/outputs/pub.key
+
+PACKAGE=ImageRSACipher
+do_exec intro/inputs/glider-0480.png intro/outputs/pub.key ECB intro/outputs/glider-0480-rsa.png
